@@ -7,7 +7,7 @@
     
     <p>{{ pizza.description }}</p>
     
-    <img src = "{{ url_for('static', filename=pizza.image) }}">
+    <img src = "{{ url_for('static', filename='img/' + pizza.image) }}">
     {{ wtf.quick_form(form) }}
     
 

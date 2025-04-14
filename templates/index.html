@@ -5,7 +5,7 @@
     <ul>
         {% for pizza in pizzas %}
             <li><a href = "{{ url_for('singleProductPage',pizzaName = pizza.name)}}">{{ pizza.name }}</a> - {{ pizza.price }}</li>
-            <img src = "{{ url_for('static', filename = pizza.image) }}">
+            <img src = "{{ url_for('static', filename = 'img/' + pizza.image) }}">
         {% endfor %}
     </ul>
 

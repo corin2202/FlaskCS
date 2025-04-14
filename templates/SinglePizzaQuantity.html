@@ -4,7 +4,7 @@
     <h1>{{ pizza.name }}</h1>
     <p>Price: {{ pizza.price }}</p>
     <p>{{ pizza.description }}</p>
-    <img src = "{{ url_for('static', filename=pizza.image) }}">
+    <img src = "{{ url_for('static', filename= 'img/' + pizza.image) }}">
     <p>Quantity in basket: {{ quantity }}</p>
     
 {% endblock %}
