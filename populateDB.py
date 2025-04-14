@@ -6,8 +6,14 @@ pizzas = [
     { "name": "Hawaiian", "price":"£17.99", "description": "Pineapple, ham, cheese and tomato", "image": "hawaiian.jpg", "veggie": False },
     { "name": "Onion", "price": "£13.99", "description": "Onion", "image": "onion.jpg", "veggie": True},
     { "name": "Chocolate chicken", "price": "£20.99", "description": "Chocolate sprinkles and smarties with roast chicken", "image": "chocchicken.jpg", "veggie": False},
-    { "name": "Kiwi", "price": "£13.99", "description": "Kiwi", "image": "kiwi.jpg", "veggie": True},
+    { "name": "None pizza left beef", "price": "£9.99", "description": "Beef on the left", "image": "none.webp", "veggie": False},
+    { "name": "Kiwi", "price": "£13.99", "description": "Kiwi and cheese", "image": "kiwi.jpg", "veggie": True},
+    { "name": "Tomato", "price": "£8.99", "description": "Tomato", "image": "tomato.webp", "veggie": True},
+    { "name": "Zucchini", "price": "£13.99", "description": "Zucchini and cheese", "image": "zucchini.webp", "veggie": True},
+    { "name": "Pea-zza", "price": "£12.99", "description": "Peas cress and dirt", "image": "green.webp", "veggie": True},
+    { "name": "Primitive", "price": "£4.99", "description": "...", "image": "base.jpg", "veggie": True},
     { "name": "Troll", "price": "£14.99", "description": "Beans and olives", "image": "troll.jpg", "veggie": True},
+
 ]
 
 
