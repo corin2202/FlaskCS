@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <link rel = "stylesheet" href = "{{ url_for('static', filename = 'styles.css')}}">
     <h1>Pizzas</h1>
     <ul>
         {% for pizza in pizzas %}
             <li><a href = "{{ url_for('singleProductPage',pizzaName = pizza.name)}}">{{ pizza.name }}</a> - {{ pizza.price }}</li>
-            <img src = "{{ url_for('static', filename = 'img/' + pizza.image) }}">
+            <img class = "homepizza" src = "{{ url_for('static', filename = 'img/' + pizza.image) }}">
         {% endfor %}
     </ul>
 

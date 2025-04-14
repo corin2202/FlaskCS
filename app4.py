@@ -48,8 +48,7 @@ def singleProductPage(pizzaName):
     if "basket" not in session:
         session["basket"] = {}
 
-   
-    
+
     for pizza in pizzas:
         if pizza.name == pizzaName:
 
