@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Pizzas</h1>
+    <ul>
+        {% for pizza in pizzas %}
+            <li><a href = "{{ url_for('singleProductPage',pizzaName = pizza.name)}}">{{ pizza.name }}</a> - {{ pizza.price }}</li>
+            <img src = "{{ url_for('static', filename = pizza.image) }}">
+        {% endfor %}
+    </ul>
+
+{% endblock %}
