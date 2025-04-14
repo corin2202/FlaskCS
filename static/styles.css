@@ -1,4 +1,35 @@
 .homepizza {
-    width: 300px;
-    height: auto;
+    border-radius: 30px;
+    width: 100%;  /* Make image fill the parent (which is 400px wide) */
+    height: 400px;
+    display: block; 
+}
+
+.image-slider {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 1rem;
+}
+
+
+
+.slider-track {
+    display: inline-flex;
+    gap: 1rem;
+}
+
+.image-text {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.pizza-card {
+    text-align: center;
+    width: 400px;
+
+}
+
+.pizza-type{
+    text-align: center;
 }

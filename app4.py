@@ -20,6 +20,7 @@ class Pizza(db.Model):
     price = db.Column(db.String)
     description = db.Column(db.Text)
     image = db.Column(db.String(40))
+    veggie = db.Column(db.Boolean)
 
 
 
