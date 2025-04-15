@@ -6,10 +6,14 @@
 }
 
 .image-slider {
-    width: 100%;
+   
+    display: flex;
+    
+    width: 70%;
     overflow-x: auto;
     white-space: nowrap;
     padding: 1rem;
+    margin: 0 auto;
 }
 
 
@@ -32,4 +36,26 @@
 
 .pizza-type{
     text-align: center;
+}
+
+.single-pizza-info{
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+
+h1, h2{
+    font-family: 'Lobster', cursive;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.title-slider {
+    padding-top: 1%;
+    padding-bottom: 1%;
 }

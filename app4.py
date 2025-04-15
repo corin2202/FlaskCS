@@ -67,28 +67,32 @@ def singleProductPage(pizzaName):
                
                 session.modified = True
                 
-                return render_template('SinglePizzaQuantity.html',pizza = pizza, quantity = quantity)
-            else:
-                return render_template('SinglePizza.html', pizza = pizza, form = form)
+                #return render_template('SinglePizzaQuantity.html',pizza = pizza, quantity = quantity)
+            #else:
+            return render_template('SinglePizza.html', pizza = pizza, form = form)
         
     return "Pizza not found", 404
 
 
 @app.route('/basket')
 def basketPage():
-    basket = session["basket"]
     basketItems = []
+    total_price = 0
 
-    for pizza_id, quantity in basket.items():
-        pizza = Pizza.query.get(int(pizza_id))
-        if pizza:
-            basketItems.append({
-                "pizza": pizza,
-                "quantity": quantity
-            })
+    if "basket" in session.keys():
+        basket = session["basket"]
+        for pizza_id, quantity in basket.items():
+            pizza = Pizza.query.get(int(pizza_id))
+            if pizza:
+                price = pizza.price
+                total_price += round(float(price[1:]),2) * quantity
+                basketItems.append({
+                    "pizza": pizza,
+                    "quantity": quantity
+                })
 
 
-    return render_template('basket.html', basket = basketItems)
+    return render_template('basket.html', basket = basketItems, total_price = total_price)
     
 
 if __name__ == '__main__':

@@ -2,13 +2,18 @@
 
 
 {% block content %}
-    <h1>{{ pizza.name }}</h1>
-    <p>Price: {{ pizza.price }}</p>
+    <link rel = "stylesheet" href = "{{ url_for('static', filename = 'styles.css')}}">
+    <div class = "single-pizza-info">
+        <div class = "pizza-card">
+            <h1>{{ pizza.name }}</h1>
+            <img class = "homepizza" src = "{{ url_for('static', filename='img/' + pizza.image) }}">
+            <p >Price: {{ pizza.price }}</p>
+            <p>{{ pizza.description }}</p>
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
     
-    <p>{{ pizza.description }}</p>
     
-    <img src = "{{ url_for('static', filename='img/' + pizza.image) }}">
-    {{ wtf.quick_form(form) }}
     
 
 {% endblock %}

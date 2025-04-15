@@ -6,5 +6,6 @@
     {% for pizzaDict in basket %}
         <li>{{ pizzaDict.pizza.name }} : {{ pizzaDict.quantity }}</li>
     {% endfor %}
+    <p> Total price: {{ total_price }} </p>
 
 {% endblock %}

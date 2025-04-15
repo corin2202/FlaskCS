@@ -2,8 +2,9 @@
 
 {% block content %}
     <link rel = "stylesheet" href = "{{ url_for('static', filename = 'styles.css')}}">
-    <h1 class = "pizza-type">Classic pizzas</h1>
-    <div class = "image-slider">
+    <div class = "title-slider">
+        <h1 class = "pizza-type">Classics</h1>
+        <div class = "image-slider">
         <div class = "slider-track">
             {% for pizza in pizzas %}
                 {% if pizza.veggie == False %}
@@ -16,11 +17,13 @@
                 {% endif %}
             {% endfor %}
         </div>
+        </div>
     </div>
+    
 
-
-    <h1 class = "pizza-type">Vegetarian pizzas</h1>
-    <div class = "image-slider">
+    <div class = "title-slider">
+        <h1 class = "pizza-type">Vegetarian</h1>
+        <div class = "image-slider">
         <div class = "slider-track">
             {% for pizza in pizzas %}
                 {% if pizza.veggie == True %}
@@ -33,7 +36,10 @@
                 {% endif %}
             {% endfor %}
         </div>
+        </div>
+
     </div>
+    
 
 
 {% endblock %}
