@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect, url_for
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, SubmitField
 from wtforms.validators import NumberRange, Optional
@@ -33,6 +33,10 @@ class ChoiceForm(FlaskForm):
 
     submit = SubmitField('Submit')
 
+
+
+
+
 @app.route('/')
 def galleryPage():
     pizzas = Pizza.query.all()
@@ -66,9 +70,10 @@ def singleProductPage(pizzaName):
 
                
                 session.modified = True
+
+                return redirect(url_for('singleProductPage', pizzaName = pizza.name))
                 
-                #return render_template('SinglePizzaQuantity.html',pizza = pizza, quantity = quantity)
-            #else:
+                
             return render_template('SinglePizza.html', pizza = pizza, form = form)
         
     return "Pizza not found", 404
@@ -76,6 +81,7 @@ def singleProductPage(pizzaName):
 
 @app.route('/basket')
 def basketPage():
+    # stores a basketItems as many of pizzaId: quantity
     basketItems = []
     total_price = 0
 
@@ -85,15 +91,35 @@ def basketPage():
             pizza = Pizza.query.get(int(pizza_id))
             if pizza:
                 price = pizza.price
-                total_price += round(float(price[1:]),2) * quantity
+                total_price += float(price[1:]) * quantity
                 basketItems.append({
                     "pizza": pizza,
                     "quantity": quantity
                 })
 
-
-    return render_template('basket.html', basket = basketItems, total_price = total_price)
+    return render_template('basket.html', basket = basketItems, total_price = round(total_price,2))
     
+
+@app.route('/update_quantity', methods = ["POST"])
+def update_quantity():
+    pizza_id = request.form.get('pizza_id').strip()
+    action = request.form.get('action')
+
+    if 'basket' in session.keys():
+        basket = session["basket"]
+        if pizza_id in basket:
+            if action == "increase":
+                basket[pizza_id] += 1
+            elif action == "decrease":
+                basket[pizza_id] -= 1
+                if basket[pizza_id] <= 0:
+                    del basket[pizza_id]
+            elif action == "remove":
+                del basket[pizza_id]
+
+            session["basket"] = basket
+
+    return redirect(url_for('basketPage'))
 
 if __name__ == '__main__':
     app.run(debug=True)

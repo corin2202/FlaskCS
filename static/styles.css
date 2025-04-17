@@ -38,6 +38,36 @@
     text-align: center;
 }
 
+.basket-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    gap: 15px;
+    padding-left: 2%;
+}
+
+.basket-image {
+    width: 250px;
+    height: auto;
+    border-radius: 8px;
+}
+
+.basket-item-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.basket-buttons {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.basket-buttons form {
+    display: inline;
+}
+
 .single-pizza-info{
     margin: auto;
     display: flex;
@@ -58,4 +88,16 @@ body {
 .title-slider {
     padding-top: 1%;
     padding-bottom: 1%;
+}
+
+
+
+.basket-header{
+    padding-left: 2%;
+}
+
+.price-total{
+    font-weight: bold;
+    padding-left: 2%;
+
 }

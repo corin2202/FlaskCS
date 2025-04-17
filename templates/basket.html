@@ -2,10 +2,49 @@
 
 
 {% block content %}
-    <h1> Basket: </h1>
+    <link rel = "stylesheet" href = "{{ url_for('static', filename = 'styles.css')}}">
+    <h1 class = "basket-header"> Basket: </h1>
     {% for pizzaDict in basket %}
-        <li>{{ pizzaDict.pizza.name }} : {{ pizzaDict.quantity }}</li>
+  
+    <div class="basket-item">
+        <img src="{{ url_for('static', filename = 'img/' + pizzaDict.pizza.image) }}" class="basket-image">
+            
+        <div class="basket-item-info">
+            <p><strong>{{ pizzaDict.pizza.name }}</strong></p>
+            <p>Quantity: {{ pizzaDict.quantity }}</p>
+        
+            <div class="basket-buttons">
+                    <form action="{{ url_for('update_quantity') }}" method="POST">
+                        <input type="hidden" name="pizza_id" value="{{ pizzaDict.pizza.id }}">
+                        <input type="hidden" name="action" value="increase">
+                        <button type="submit">+</button>
+                    </form>
+        
+                    <form action="{{ url_for('update_quantity') }}" method="POST">
+                        <input type="hidden" name="pizza_id" value="{{ pizzaDict.pizza.id }}">
+                        <input type="hidden" name="action" value="decrease">
+                        <button type="submit">-</button>
+                    </form>
+        
+                    <form action="{{ url_for('update_quantity') }}" method="POST">
+                        <input type="hidden" name="pizza_id" value="{{ pizzaDict.pizza.id }}">
+                        <input type="hidden" name="action" value="remove">
+                        <button type="submit">x</button>
+                    </form>
+            </div>
+        </div>
+    </div>
+
+        
+   
+
     {% endfor %}
-    <p> Total price: {{ total_price }} </p>
+    <p class = "price-total"> Total price: £{{ total_price }} </p>
+
+
+    {% if total_price > 0 %}
+    <p>Hello thisi s checkout</p>
+    {% endif %}
+
 
 {% endblock %}
