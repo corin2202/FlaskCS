@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <link rel = "stylesheet" href = "{{ url_for('static', filename = 'styles.css')}}">  
+    <p>Total price: {{ total_price }}</p>
+    {{ wtf.quick_form(form) }}
+
+
+{% endblock %}  

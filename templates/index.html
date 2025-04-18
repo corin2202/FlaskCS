@@ -7,7 +7,7 @@
         <div class = "image-slider">
         <div class = "slider-track">
             {% for pizza in pizzas %}
-                {% if pizza.veggie == False %}
+                {% if pizza.veggie == False and pizza.side == False %}
                 <div class = "pizza-card">
                     <a href = "{{ url_for('singleProductPage', pizzaName = pizza.name )}}">
                         <img class = "homepizza" src = "{{ url_for('static', filename = 'img/' + pizza.image) }}">
@@ -27,6 +27,25 @@
         <div class = "slider-track">
             {% for pizza in pizzas %}
                 {% if pizza.veggie == True %}
+                <div class = "pizza-card">
+                    <a href = "{{ url_for('singleProductPage', pizzaName = pizza.name )}}">
+                        <img class = "homepizza" src = "{{ url_for('static', filename = 'img/' + pizza.image) }}">
+                    </a>
+                    <p class="image-text">{{ pizza.name }}</p>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        </div>
+
+    </div>
+
+    <div class = "title-slider">
+        <h1 class = "pizza-type">Sides</h1>
+        <div class = "image-slider">
+        <div class = "slider-track">
+            {% for pizza in pizzas %}
+                {% if pizza.side == True %}
                 <div class = "pizza-card">
                     <a href = "{{ url_for('singleProductPage', pizzaName = pizza.name )}}">
                         <img class = "homepizza" src = "{{ url_for('static', filename = 'img/' + pizza.image) }}">
