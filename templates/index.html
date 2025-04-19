@@ -1,64 +1,48 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <link rel = "stylesheet" href = "{{ url_for('static', filename = 'styles.css')}}">
-    <div class = "title-slider">
-        <h1 class = "pizza-type">Classics</h1>
-        <div class = "image-slider">
-        <div class = "slider-track">
-            {% for pizza in pizzas %}
-                {% if pizza.veggie == False and pizza.side == False %}
-                <div class = "pizza-card">
-                    <a href = "{{ url_for('singleProductPage', pizzaName = pizza.name )}}">
-                        <img class = "homepizza" src = "{{ url_for('static', filename = 'img/' + pizza.image) }}">
-                    </a>
-                    <p class="image-text">{{ pizza.name }}</p>
-                </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-        </div>
-    </div>
-    
+<link rel="stylesheet" href="{{ url_for('static', filename = 'styles.css')}}">
 
-    <div class = "title-slider">
-        <h1 class = "pizza-type">Vegetarian</h1>
-        <div class = "image-slider">
-        <div class = "slider-track">
-            {% for pizza in pizzas %}
-                {% if pizza.veggie == True %}
-                <div class = "pizza-card">
-                    <a href = "{{ url_for('singleProductPage', pizzaName = pizza.name )}}">
-                        <img class = "homepizza" src = "{{ url_for('static', filename = 'img/' + pizza.image) }}">
-                    </a>
-                    <p class="image-text">{{ pizza.name }}</p>
-                </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-        </div>
+<form method="GET" class="sort-form">
+    <label for="sort_by">Sort by:</label>
+    <select name="sort_by" id="sort_by" onchange="this.form.submit()">
+        <option value="">-- Select --</option>
+        <option value ="priceup">Price ascending</option>
+        <option value="pricedown">Price descending</option>
+        <option value ="footprintup">Least environmental impact</option>
+        <option value="footprintdown">Most environmental impact</option>
+    </select>
+</form>
 
-    </div>
-
-    <div class = "title-slider">
-        <h1 class = "pizza-type">Sides</h1>
-        <div class = "image-slider">
-        <div class = "slider-track">
+{% for title, pizzas in pizzaDict.items() %}
+<div class="title-slider">
+    <h1 class="pizza-type">{{ title }}</h1>
+    <div class="image-slider">
+        <div class="slider-track">
             {% for pizza in pizzas %}
-                {% if pizza.side == True %}
-                <div class = "pizza-card">
-                    <a href = "{{ url_for('singleProductPage', pizzaName = pizza.name )}}">
-                        <img class = "homepizza" src = "{{ url_for('static', filename = 'img/' + pizza.image) }}">
-                    </a>
-                    <p class="image-text">{{ pizza.name }}</p>
-                </div>
-                {% endif %}
+            <div class="pizza-card">
+                <a href="{{ url_for('singleProductPage', pizzaName = pizza.name )}}">
+                    <img class="homepizza" src="{{ url_for('static', filename = 'img/' + pizza.image) }}">
+                </a>
+                <p class="image-text">{{ pizza.name }} - {{ pizza.price }}</p>
+
+                <form method="POST">
+                    <input type="hidden" name="pizza_id" value="{{ pizza.id }}">
+                    <input type="hidden" name="increase" value="true">
+                    <button type="submit">+</button>
+                </form>
+
+                <p>Carbon footprint: {{ pizza.footprint }}</p>
+            </div>
+
             {% endfor %}
-        </div>
         </div>
 
     </div>
-    
+
+</div>
+
+{% endfor %}
 
 
 {% endblock %}

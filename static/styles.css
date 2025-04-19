@@ -37,7 +37,6 @@ body {
 
 .image-text {
     font-weight: bold;
-    margin-top: 10px;
 }
 
 .pizza-type{
@@ -136,11 +135,50 @@ body {
     width: 100%;
 }
 
-.pizza-card {
+.pizza-card > * {
     text-align: center;
     width: 400px;
+    gap: 10px;
+    padding: 5px;
+}
+
+/* checkout page */
+.checkout-form{
+    width: 20%;
+    margin: auto;
+    border: 2px solid black;    
+}
+
+
+.payment-fields{
+    padding: 4%;
+    display: flex;
+    flex-direction: column;
+}
+
+.submit-field{
+    padding: 4%;
+}
+
+.price-text{
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.cvc-field{
+    width: 50px;
+}
+
+.exp-date-field{
+    width: 70px;
 
 }
+
+.error{
+    color: red;
+}
+
+
 
 
 

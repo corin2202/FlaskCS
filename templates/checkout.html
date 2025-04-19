@@ -3,8 +3,48 @@
 
 {% block content %}
     <link rel = "stylesheet" href = "{{ url_for('static', filename = 'styles.css')}}">  
-    <p>Total price: {{ total_price }}</p>
-    {{ wtf.quick_form(form) }}
+    
+    
+
+
+    <form method = "POST" class = "checkout-form">
+
+        {{ form.hidden_tag() }}
+       
+        <div class = "payment-fields">
+            {{ form.card_number.label }}
+            {{ form.card_number(class = "card-number-field") }}
+            {% for error in form.card_number.errors %}
+                <p class="error">{{ error }}</p>
+            {% endfor %}
+      
+            {{ form.exp_date.label }} 
+            {{ form.exp_date(class = "exp-date-field") }}
+            {% for error in form.exp_date.errors %}
+                <p class="error">{{ error }}</p>
+            {% endfor %}
+
+            {{ form.cvc.label }}
+            {{ form.cvc(class = "cvc-field") }}
+            {% for error in form.cvc.errors %}
+                <p class="error">{{ error }}</p>
+            {% endfor %}
+
+        </div>
+        
+       
+        <div class = "submit-field">
+            <p>Subtotal:</p>
+            {% for item in receipt_list %}
+                <p>{{ item[0] }} x{{ item[1] }} - £{{ item[2] }}</p>
+            {% endfor %}
+            <p class = "price-text">£{{ total_price }}</p>
+
+            {{ form.submit(class = "submit-button") }}
+
+        </div>
+
+    </form>
 
 
 {% endblock %}  

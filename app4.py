@@ -23,6 +23,7 @@ class Pizza(db.Model):
     image = db.Column(db.String(40))
     veggie = db.Column(db.Boolean)
     side = db.Column(db.Boolean)
+    footprint = db.Column(db.Integer)
 
 
 
@@ -35,14 +36,12 @@ class ChoiceForm(FlaskForm):
 
     submit = SubmitField('Submit')
 
-def card_number_valid(form,field):
+def card_number_valid(form, field):
     # checks for 3 sets of 4 digits, followed by either space or hyphen, then checks for last 4 no space or hyphen on the end
     if re.match(r'^([0-9]{4}(-|\s)?){3}[0-9]{4}$',field.data) == None:
         raise ValidationError("Card does not match correct format")
+    
     # performs luhn checksum, in reverse order
-    # add the digit to total if odd index, if even double it and add it
-    # but if doubled result 2 digits long, add sum of digits to total
-    # multiple of 10 is valid card number
     index = 1
     total = 0
     for num in field.data[::-1]:
@@ -60,19 +59,95 @@ def card_number_valid(form,field):
 
     if total % 10 != 0:
         raise ValidationError("Card is not a valid number sequence")
+    
+def exp_date_valid(form, field):
+    if re.match(r'^(0?[1-9]|1[0-2])/[0-9]{2}$',field.data) == None:
+        raise ValidationError("Expiry date does not match right format MM/YY")
+    
+def cvc_valid(form,field):
+    if field.data < 100 or field.data > 999:
+        raise ValidationError("CVC not a 3 digit number")
+    
+
+def sort_pizzas(sort_by, pizzaDict):
+    if sort_by != "":
+        for pizzas in pizzaDict.values():
+            match sort_by:
+                case "priceup":
+                    pizzas.sort(key = lambda x: float(x.price[1:]))
+                case "pricedown":
+                    pizzas.sort(key = lambda x: float(x.price[1:]), reverse = True)
+                case "footprintup":
+                    pizzas.sort(key = lambda x: x.footprint)
+                case "footprintdown":
+                    pizzas.sort(key = lambda x: x.footprint, reverse = True)
+
 
 
 class CardForm(FlaskForm):
     card_number = StringField("Card number", [DataRequired(), card_number_valid])
-    submit = SubmitField('Submit')
+    exp_date = StringField("Expiry date", [DataRequired(), exp_date_valid])
+    cvc = IntegerField("CVC",[DataRequired(),cvc_valid])
+    submit = SubmitField('Pay now')
 
     
 
 
-@app.route('/')
+@app.route('/', methods = ["GET","POST"])
 def galleryPage():
     pizzas = Pizza.query.all()
-    return render_template('index.html',pizzas = pizzas)
+
+    pizza_id = str(request.form.get('pizza_id'))
+    increase = request.form.get('increase')
+    
+
+    if "basket" not in session:
+        session["basket"] = {}
+
+    # basket stores many dictionary of pizza_id and quantity
+
+    if increase == "true":
+
+        if pizza_id in session["basket"]:
+            session["basket"][pizza_id] += 1
+        else:
+            session["basket"][pizza_id] = 1
+
+    session.modified = True
+
+    # create dictionary of "category": [pizzas]
+    # pass to gallery page
+    # create a function that sorts the pizzas list
+    # when button pressed to sort by environmental impact or price
+    # redirect to gallery page made, repassing in the sorted pizzas dict
+
+    
+
+    pizzaDict = {"Classics": [], "Veggie": [], "Sides": []}
+    for pizza in pizzas:
+        if not pizza.veggie and not pizza.side:
+            pizzaDict["Classics"].append(pizza)
+        elif pizza.veggie:
+            pizzaDict["Veggie"].append(pizza)
+        else:
+            pizzaDict["Sides"].append(pizza)
+
+
+    sort_by = request.args.get('sort_by')
+    sort_pizzas(sort_by, pizzaDict)
+    
+
+    
+
+    
+
+    
+
+    
+
+ 
+
+    return render_template('index.html',pizzaDict = pizzaDict)
 
 
 
@@ -94,7 +169,6 @@ def singleProductPage(pizzaName):
             if form.validate_on_submit():
                 quantity = form.quantity.data
 
-                
                 if str(pizza.id) in session["basket"]:
                     session["basket"][str(pizza.id)] += quantity  
                 else:
@@ -133,7 +207,7 @@ def basketPage():
                 })
 
         if checkout == "yes":
-            return redirect(url_for('checkout',total_price = total_price))
+            return redirect(url_for('checkout',total_price = round(total_price,2)))
 
 
     return render_template('basket.html', basket = basketItems, total_price = round(total_price,2))
@@ -142,12 +216,34 @@ def basketPage():
 @app.route('/checkout/<total_price>', methods = ["GET","POST"])
 def checkout(total_price):
     form = CardForm()
+    receipt_list = []
+
+    if "basket" in session.keys():
+        basket = session["basket"]
+        for pizza_id, quantity in basket.items():
+            pizza = Pizza.query.get(int(pizza_id))
+            if pizza:
+                newItem = []
+                newItem.append(pizza.name)
+                newItem.append(quantity)
+                newItem.append(round(float(pizza.price[1:]) * quantity,2))
+                receipt_list.append(newItem)
+
+
+        session.modified = True
+
+
+
 
     if form.validate_on_submit():
+        print("Working")
         # clear basket and send to new page
         return render_template('checkoutSuccess.html')
     
-    return render_template('checkout.html', total_price = total_price, form = form)
+    else:
+        print("Not working")
+    
+    return render_template('checkout.html', total_price = total_price, form = form, receipt_list = receipt_list)
 
 
 @app.route('/update_quantity', methods = ["POST"])
