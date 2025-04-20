@@ -4,6 +4,7 @@ from wtforms import IntegerField, SubmitField, StringField, ValidationError
 from wtforms.validators import NumberRange, Optional, DataRequired
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
+from flask import jsonify
 import re
 
 app = Flask(__name__)
@@ -92,7 +93,6 @@ class CardForm(FlaskForm):
 
     
 
-
 @app.route('/', methods = ["GET","POST"])
 def galleryPage():
     pizzas = Pizza.query.all()
@@ -115,14 +115,6 @@ def galleryPage():
 
     session.modified = True
 
-    # create dictionary of "category": [pizzas]
-    # pass to gallery page
-    # create a function that sorts the pizzas list
-    # when button pressed to sort by environmental impact or price
-    # redirect to gallery page made, repassing in the sorted pizzas dict
-
-    
-
     pizzaDict = {"Classics": [], "Veggie": [], "Sides": []}
     for pizza in pizzas:
         if not pizza.veggie and not pizza.side:
@@ -135,31 +127,21 @@ def galleryPage():
 
     sort_by = request.args.get('sort_by')
     sort_pizzas(sort_by, pizzaDict)
-    
-
-    
-
-    
-
-    
-
-    
-
- 
-
     return render_template('index.html',pizzaDict = pizzaDict)
 
-
+@app.route('/pizza-info/<pizzaId>')
+def hover_info(pizzaId):
+    pizza = Pizza.query.get(pizzaId)
+    if pizza:
+        return pizza.description
 
 
 @app.route('/pizza/<pizzaName>',methods=['GET','POST'])
 def singleProductPage(pizzaName):
     pizzas = Pizza.query.all()
 
-
     if "basket" not in session:
         session["basket"] = {}
-
 
     for pizza in pizzas:
         if pizza.name == pizzaName:
@@ -231,8 +213,6 @@ def checkout(total_price):
 
 
         session.modified = True
-
-
 
 
     if form.validate_on_submit():

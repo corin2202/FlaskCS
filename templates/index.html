@@ -22,7 +22,7 @@
             {% for pizza in pizzas %}
             <div class="pizza-card">
                 <a href="{{ url_for('singleProductPage', pizzaName = pizza.name )}}">
-                    <img class="homepizza" src="{{ url_for('static', filename = 'img/' + pizza.image) }}">
+                    <img class="homepizza" src="{{ url_for('static', filename = 'img/' + pizza.image) }}" data-id = "{{ pizza.id }}">
                 </a>
                 <p class="image-text">{{ pizza.name }} - {{ pizza.price }}</p>
 
@@ -43,6 +43,48 @@
 </div>
 
 {% endfor %}
+{% endblock %}
 
+{% block scripts %}
+<script>
 
+    var imgs = document.querySelectorAll(".homepizza");
+    imgs.forEach(function(img) {
+        img.addEventListener("mouseover", retrieveInfo);
+        img.addEventListener("mouseout", removeInfo);
+    });
+    
+    async function retrieveInfo(event) {
+        var pizzaId = event.target.getAttribute("data-id");
+        console.log(pizzaId);
+
+        try {
+            const response = await fetch(`/pizza-info/${pizzaId}`);
+            const data = await response.text();
+            displayInfo(data, pizzaId, event.target);
+        } catch (error) {
+            console.error("Error fetching info");
+        }
+    }
+
+    function displayInfo(data, id, img) {
+        var div = document.createElement("div");
+        var text = document.createElement("p");
+        text.innerText = data;
+        div.appendChild(text);
+
+        img._infoDiv = div;
+        img.parentElement.appendChild(div); 
+    }
+
+    function removeInfo(event) {
+        
+        var div = event.target._infoDiv;
+        if (div) {
+            div.remove();  
+            delete event.target._infoDiv;  
+        }
+    }
+
+</script>
 {% endblock %}
