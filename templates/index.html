@@ -53,6 +53,18 @@
         img.addEventListener("mouseover", retrieveInfo);
         img.addEventListener("mouseout", removeInfo);
     });
+
+    window.addEventListener("beforeunload", () => {
+        sessionStorage.setItem("scrollY", window.scrollY);
+    });
+
+    
+    window.addEventListener("load", () => {
+        const scrollY = sessionStorage.getItem("scrollY");
+        if (scrollY !== null) {
+            window.scrollTo(0, parseInt(scrollY));
+        }
+    });
     
     async function retrieveInfo(event) {
         var pizzaId = event.target.getAttribute("data-id");
@@ -73,6 +85,20 @@
         text.innerText = data;
         div.appendChild(text);
 
+       
+        div.style.position = "absolute";
+        div.style.bottom = "50px";
+        div.style.left = "0";
+        div.style.width = "400px";
+        div.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+        div.style.color = "white";
+        div.style.padding = "8px 12px";
+        div.style.boxSizing = "border-box";
+        text.style.margin = "0"; 
+
+        var parent = img.parentElement;
+        parent.style.position = "relative";
+
         img._infoDiv = div;
         img.parentElement.appendChild(div); 
     }
@@ -85,6 +111,5 @@
             delete event.target._infoDiv;  
         }
     }
-
 </script>
 {% endblock %}

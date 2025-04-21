@@ -129,6 +129,7 @@ def galleryPage():
     sort_pizzas(sort_by, pizzaDict)
     return render_template('index.html',pizzaDict = pizzaDict)
 
+# returns the description when hovered
 @app.route('/pizza-info/<pizzaId>')
 def hover_info(pizzaId):
     pizza = Pizza.query.get(pizzaId)
