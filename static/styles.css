@@ -4,7 +4,9 @@ h1, h2{
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Cabin', sans-serif;
+    padding-top: 70px;
+   
 }
 
 /* home page */
@@ -177,6 +179,36 @@ body {
 .error{
     color: red;
 }
+
+.navbar-custom {
+    background-color: rgb(188, 6, 6);
+    border-color: black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    
+}
+
+
+.navbar-custom .navbar-brand,
+.navbar-custom .nav > li > a {
+    color: white; 
+}
+
+.navbar-custom .navbar-brand:hover,
+.navbar-custom .nav > li > a:hover {
+    color: #ffcccc; 
+}
+
+.navbar-brand{
+    font-family: 'Lobster', cursive;
+    font-size: 40px;
+}
+
+.navbar-element{
+    font-weight: bold;
+    font-size: 15px;
+}
+
+
 
 
 

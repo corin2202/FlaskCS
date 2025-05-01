@@ -3,16 +3,7 @@
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename = 'styles.css')}}">
 
-<form method="GET" class="sort-form">
-    <label for="sort_by">Sort by:</label>
-    <select name="sort_by" id="sort_by" onchange="this.form.submit()">
-        <option value="">-- Select --</option>
-        <option value ="priceup">Price ascending</option>
-        <option value="pricedown">Price descending</option>
-        <option value ="footprintup">Least environmental impact</option>
-        <option value="footprintdown">Most environmental impact</option>
-    </select>
-</form>
+
 
 {% for title, pizzas in pizzaDict.items() %}
 <div class="title-slider">
@@ -46,6 +37,7 @@
 {% endblock %}
 
 {% block scripts %}
+{{ super() }}
 <script>
 
     var imgs = document.querySelectorAll(".homepizza");

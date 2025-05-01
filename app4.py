@@ -217,13 +217,10 @@ def checkout(total_price):
 
 
     if form.validate_on_submit():
-        print("Working")
+        
         # clear basket and send to new page
         return render_template('checkoutSuccess.html')
-    
-    else:
-        print("Not working")
-    
+
     return render_template('checkout.html', total_price = total_price, form = form, receipt_list = receipt_list)
 
 
