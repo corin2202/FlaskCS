@@ -17,13 +17,14 @@
                 </a>
                 <p class="image-text">{{ pizza.name }} - {{ pizza.price }}</p>
 
+                
+
+                <p>Carbon footprint: {{ pizza.footprint }}</p>
                 <form method="POST">
                     <input type="hidden" name="pizza_id" value="{{ pizza.id }}">
                     <input type="hidden" name="increase" value="true">
-                    <button type="submit">+</button>
+                    <button type = "submit" class="add-to-cart-btn">Add to Cart</button>
                 </form>
-
-                <p>Carbon footprint: {{ pizza.footprint }}</p>
             </div>
 
             {% endfor %}
@@ -81,7 +82,7 @@
         div.style.position = "absolute";
         div.style.bottom = "50px";
         div.style.left = "0";
-        div.style.width = "400px";
+        div.style.width = "300px";
         div.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
         div.style.color = "white";
         div.style.padding = "8px 12px";
