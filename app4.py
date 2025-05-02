@@ -5,6 +5,7 @@ from wtforms.validators import NumberRange, Optional, DataRequired
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify
+import json
 import re
 
 app = Flask(__name__)
@@ -25,6 +26,8 @@ class Pizza(db.Model):
     veggie = db.Column(db.Boolean)
     side = db.Column(db.Boolean)
     footprint = db.Column(db.Integer)
+    rating = db.Column(db.Float)
+    numratings = db.Column(db.Integer)
 
 
 
@@ -147,6 +150,8 @@ def singleProductPage(pizzaName):
     for pizza in pizzas:
         if pizza.name == pizzaName:
 
+            rating = round(pizza.rating)
+
             form = ChoiceForm()
 
             if form.validate_on_submit():
@@ -160,10 +165,10 @@ def singleProductPage(pizzaName):
                
                 session.modified = True
 
-                return redirect(url_for('singleProductPage', pizzaName = pizza.name))
+                return redirect(url_for('singleProductPage', pizzaName = pizza.name, rating = rating, numratings = pizza.numratings))
                 
                 
-            return render_template('SinglePizza.html', pizza = pizza, form = form)
+            return render_template('SinglePizza.html', pizza = pizza, form = form, rating = rating, numratings = pizza.numratings)
         
     return "Pizza not found", 404
 
@@ -200,6 +205,7 @@ def basketPage():
 def checkout(total_price):
     form = CardForm()
     receipt_list = []
+    pizzas_bought = []
 
     if "basket" in session.keys():
         basket = session["basket"]
@@ -211,6 +217,7 @@ def checkout(total_price):
                 newItem.append(quantity)
                 newItem.append(round(float(pizza.price[1:]) * quantity,2))
                 receipt_list.append(newItem)
+                
 
 
         session.modified = True
@@ -218,10 +225,40 @@ def checkout(total_price):
 
     if form.validate_on_submit():
         
-        # clear basket and send to new page
-        return render_template('checkoutSuccess.html')
+        
+        return redirect(url_for('leave_review'))
 
     return render_template('checkout.html', total_price = total_price, form = form, receipt_list = receipt_list)
+
+
+@app.route('/review', methods = ["GET","POST"])
+def leave_review():
+    pizzas_bought = []
+    if "basket" in session.keys():
+        basket = session["basket"]
+        for pizza_id, quantity in basket.items():
+            pizza = Pizza.query.get(int(pizza_id))
+            if pizza:
+                pizzas_bought.append(pizza)
+
+    ratings_json = request.form.get("ratings_json")
+    if ratings_json != None:
+        if ratings_json != "":
+            ratings = json.loads(ratings_json)
+            for id, rating in ratings.items():
+                pizza = Pizza.query.get(int(id))
+                current_rating = pizza.rating
+                num_ratings = pizza.numratings
+                new_rating = ((current_rating * num_ratings) + rating) / (num_ratings + 1) 
+                pizza.rating = new_rating
+                pizza.numratings += 1
+        
+            db.session.commit()
+            del session["basket"]
+            return redirect(url_for('galleryPage'))
+    
+    
+    return render_template('checkoutSuccess.html', pizzas = pizzas_bought)
 
 
 @app.route('/update_quantity', methods = ["POST"])

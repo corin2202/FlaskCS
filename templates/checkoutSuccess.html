@@ -4,9 +4,78 @@
 {% block content %}
     <link rel = "stylesheet" href = "{{ url_for('static', filename = 'styles.css')}}">  
     <div class = "checkout-container">
-        <h1> Checkout success! Thanks for shopping</h1>
+        <h1> Checkout success! Want to leave a review?</h1>
     </div>
+
+    
+        <div class = "review-container">
+            <form method = "POST">
+                <div class= "review">
+                    {% for pizza in pizzas %}
+                        <div class = "review-item">
+                            <p> {{ pizza.name }}</p>
+                            <div class = "stars" data-id = "{{ pizza.id }}">
+                                <img src = "{{ url_for('static', filename = 'img/greystar.png') }}">
+                                <img src = "{{ url_for('static', filename = 'img/greystar.png') }}">
+                                <img src = "{{ url_for('static', filename = 'img/greystar.png') }}">
+                                <img src = "{{ url_for('static', filename = 'img/greystar.png') }}">
+                                <img src = "{{ url_for('static', filename = 'img/greystar.png') }}">
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <input type = "hidden" name = "ratings_json" id = "ratings_json">
+                    <button type = "submit"> Submit ratings</button>
+                </div>
+
+                
+
+            </form>
+            
+        </div>
+        
+    
+    
+    
+{% endblock %}  
+
+{% block scripts %}
+{{ super() }}
+<script defer>
+    const ratings = {}
+    const stars = document.querySelectorAll(".stars img");
+    console.log(stars);
+    
+    
+    var rowNum = 0;
+    while (rowNum <= stars.length / 5){
+        const startIndex = rowNum * 5;
+        const endIndex = startIndex + 5;
+        const row = Array.from(stars).slice(startIndex,endIndex);
+        console.log(row);
+        
+        row.forEach((star, index1) => {
+            star.addEventListener("click", () => {
+ 
+                row.forEach((star, index2) => {
+                    if (index2 <= index1){
+                        star.src = "{{ url_for('static', filename = 'img/star.png') }}";
+                    } else {
+                        star.src = "{{ url_for('static', filename = 'img/greystar.png') }}";
+                    }
+                
+                });
+
+            
+                ratings[star.parentElement.getAttribute("data-id")] = index1 + 1;
+                document.getElementById("ratings_json").value = JSON.stringify(ratings);
+            });
+        });
+
+        rowNum += 1
+
+    }
+
     
 
-
-{% endblock %}  
+</script>
+{% endblock %}

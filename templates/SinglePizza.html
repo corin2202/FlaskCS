@@ -9,6 +9,19 @@
             <img class = "homepizza" src = "{{ url_for('static', filename='img/' + pizza.image) }}">
             <p >Price: {{ pizza.price }}</p>
             <p>{{ pizza.description }}</p>
+            <div class = "star-rating">
+                {% for gold_star_num in range(0,rating) %}
+                    <img class = "star" src = "{{ url_for('static', filename = 'img/star.png') }}">
+                {% endfor %}
+
+                {% for grey_star_num in range(0, 5-rating) %}
+                    <img class = "star" src = "{{ url_for('static', filename = 'img/greystar.png') }}">
+                {% endfor %}
+
+            </div>
+
+            <p>({{ numratings }})</p>
+          
             {{ wtf.quick_form(form) }}
         </div>
     </div>

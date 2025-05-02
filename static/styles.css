@@ -38,12 +38,11 @@ body {
 }
 
 .image-slider {
-    display: flex;
+    position: relative;
     width: 70%;
-    overflow-x: auto;
-    white-space: nowrap;
     padding: 1rem;
     margin: 0 auto;
+    overflow: hidden; 
 }
 
 .slider-track {
@@ -51,12 +50,30 @@ body {
     gap: 50px;
 }
 
+
 .image-text {
     font-weight: bold;
 }
 
 .pizza-type{
     text-align: center;
+    margin: 0 auto;
+    flex-grow: 1;
+}
+
+.review-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+}
+
+.review-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    padding: 20px;
 }
 
 /* basket page */
@@ -121,7 +138,7 @@ body {
 
 /* Checkout success page */
 .checkout-container{
-    height: 100vh;
+  
     display: flex;
     justify-content: center;
     align-items: center;
@@ -167,6 +184,18 @@ body {
     width: 300px;
     padding: 5px;
 }
+
+.stars > *{
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+}
+
+.star-rating > *{
+    height: 20px;
+    width: 20px;
+}
+
 
 /* checkout page */
 .checkout-form{
@@ -231,6 +260,35 @@ body {
     font-weight: bold;
     font-size: 15px;
 }
+
+.scroll-right, .scroll-left{
+    height: 50px;
+    width: auto;
+
+}
+
+.title-container {
+    width: 70%;
+    margin: 0 auto; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.scroll-buttons {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.scroll-left,
+.scroll-right {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
 
 
 

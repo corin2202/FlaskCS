@@ -7,32 +7,45 @@
 
 {% for title, pizzas in pizzaDict.items() %}
 <div class="title-slider">
-    <h1 class="pizza-type">{{ title }}</h1>
+    <div class="title-container">
+        <h1 class="pizza-type">{{ title }}</h1>
+        <div class="scroll-buttons">
+            <img class="scroll-left" src="{{ url_for('static', filename = 'img/left_arrow.jpg') }}">
+            <img class="scroll-right" src="{{ url_for('static', filename = 'img/right_arrow.jpg') }}">
+        </div>
+    </div>
+
+
     <div class="image-slider">
         <div class="slider-track">
+
             {% for pizza in pizzas %}
             <div class="pizza-card">
                 <a href="{{ url_for('singleProductPage', pizzaName = pizza.name )}}">
-                    <img class="homepizza" src="{{ url_for('static', filename = 'img/' + pizza.image) }}" data-id = "{{ pizza.id }}">
+                    <img class="homepizza" src="{{ url_for('static', filename = 'img/' + pizza.image) }}"
+                        data-id="{{ pizza.id }}">
                 </a>
                 <p class="image-text">{{ pizza.name }} - {{ pizza.price }}</p>
-
-                
 
                 <p>Carbon footprint: {{ pizza.footprint }}</p>
                 <form method="POST">
                     <input type="hidden" name="pizza_id" value="{{ pizza.id }}">
                     <input type="hidden" name="increase" value="true">
-                    <button type = "submit" class="add-to-cart-btn">Add to Cart</button>
+                    <button type="submit" class="add-to-cart-btn">Add to Cart</button>
                 </form>
             </div>
 
             {% endfor %}
         </div>
 
+
     </div>
 
+
+
 </div>
+
+
 
 {% endfor %}
 {% endblock %}
@@ -41,8 +54,28 @@
 {{ super() }}
 <script>
 
+    const rightButtons = Array.from(document.getElementsByClassName('scroll-right'));
+    const leftButtons = Array.from(document.getElementsByClassName('scroll-left'));
+    const sliders = Array.from(document.getElementsByClassName('image-slider'));
+
+    rightButtons.forEach((rightButton, index) => {
+        const sliderTrack = sliders[index];
+        rightButton.addEventListener("click", () => {
+            sliderTrack.scrollLeft += 300;
+            
+        });
+    });
+
+    leftButtons.forEach((leftButton, index) => {
+        const sliderTrack = sliders[index];
+        leftButton.addEventListener("click", () => {
+            sliderTrack.scrollLeft -= 300;
+        });
+    });
+
+
     var imgs = document.querySelectorAll(".homepizza");
-    imgs.forEach(function(img) {
+    imgs.forEach(function (img) {
         img.addEventListener("mouseover", retrieveInfo);
         img.addEventListener("mouseout", removeInfo);
     });
@@ -51,14 +84,14 @@
         sessionStorage.setItem("scrollY", window.scrollY);
     });
 
-    
+
     window.addEventListener("load", () => {
         const scrollY = sessionStorage.getItem("scrollY");
         if (scrollY !== null) {
             window.scrollTo(0, parseInt(scrollY));
         }
     });
-    
+
     async function retrieveInfo(event) {
         var pizzaId = event.target.getAttribute("data-id");
         console.log(pizzaId);
@@ -78,7 +111,7 @@
         text.innerText = data;
         div.appendChild(text);
 
-       
+
         div.style.position = "absolute";
         div.style.bottom = "50px";
         div.style.left = "0";
@@ -87,21 +120,21 @@
         div.style.color = "white";
         div.style.padding = "8px 12px";
         div.style.boxSizing = "border-box";
-        text.style.margin = "0"; 
+        text.style.margin = "0";
 
         var parent = img.parentElement;
         parent.style.position = "relative";
 
         img._infoDiv = div;
-        img.parentElement.appendChild(div); 
+        img.parentElement.appendChild(div);
     }
 
     function removeInfo(event) {
-        
+
         var div = event.target._infoDiv;
         if (div) {
-            div.remove();  
-            delete event.target._infoDiv;  
+            div.remove();
+            delete event.target._infoDiv;
         }
     }
 </script>
