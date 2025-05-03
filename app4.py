@@ -15,7 +15,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.sqlite3'
 db = SQLAlchemy(app)
 
 
-
 class Pizza(db.Model):
     __tablename__ = "Pizzas"
     id = db.Column(db.Integer,primary_key = True)
@@ -28,8 +27,6 @@ class Pizza(db.Model):
     footprint = db.Column(db.Integer)
     rating = db.Column(db.Float)
     numratings = db.Column(db.Integer)
-
-
 
 
 class ChoiceForm(FlaskForm):
@@ -86,8 +83,6 @@ def sort_pizzas(sort_by, pizzaDict):
                 case "footprintdown":
                     pizzas.sort(key = lambda x: x.footprint, reverse = True)
 
-
-
 class CardForm(FlaskForm):
     card_number = StringField("Card number", [DataRequired(), card_number_valid])
     exp_date = StringField("Expiry date", [DataRequired(), exp_date_valid])
@@ -98,6 +93,7 @@ class CardForm(FlaskForm):
 def search():
     query1 = request.form.get('query', '').strip().lower()
 
+    # returns pizza that has the entered string in it basic search
     searchedPizza = None
     for id in range(1,db.session.query(Pizza).count()):
         pizza = Pizza.query.get(id)
@@ -109,6 +105,7 @@ def search():
         return redirect(url_for('singleProductPage', pizzaName = searchedPizza.name, rating = round(searchedPizza.rating), numratings = searchedPizza.numratings))
     else:
         return redirect(url_for('galleryPage'))
+    
 
 @app.route('/', methods = ["GET","POST"])
 def galleryPage():
@@ -117,14 +114,11 @@ def galleryPage():
     pizza_id = str(request.form.get('pizza_id'))
     increase = request.form.get('increase')
     
-
     if "basket" not in session:
         session["basket"] = {}
 
     # basket stores many dictionary of pizza_id and quantity
-
     if increase == "true":
-
         if pizza_id in session["basket"]:
             session["basket"][pizza_id] += 1
         else:
@@ -161,11 +155,11 @@ def singleProductPage(pizzaName):
     if "basket" not in session:
         session["basket"] = {}
 
+    # updates basket total with amount entered
     for pizza in pizzas:
         if pizza.name == pizzaName:
 
             rating = round(pizza.rating)
-
             form = ChoiceForm()
 
             if form.validate_on_submit():
@@ -176,12 +170,9 @@ def singleProductPage(pizzaName):
                 else:
                     session["basket"][str(pizza.id)] = quantity 
 
-               
                 session.modified = True
 
                 return redirect(url_for('singleProductPage', pizzaName = pizza.name, rating = rating, numratings = pizza.numratings))
-                
-                
             return render_template('SinglePizza.html', pizza = pizza, form = form, rating = rating, numratings = pizza.numratings)
         
     return "Pizza not found", 404
@@ -193,8 +184,7 @@ def basketPage():
     basketItems = []
     total_price = 0
     
-
-
+    # updates total price of basket total
     if "basket" in session.keys():
         checkout = request.form.get('checkout_value')
         basket = session["basket"]
@@ -219,8 +209,8 @@ def basketPage():
 def checkout(total_price):
     form = CardForm()
     receipt_list = []
-    pizzas_bought = []
 
+    # creates a receipt of [[pizzaname, quantity, total price]]
     if "basket" in session.keys():
         basket = session["basket"]
         for pizza_id, quantity in basket.items():
@@ -231,15 +221,10 @@ def checkout(total_price):
                 newItem.append(quantity)
                 newItem.append(round(float(pizza.price[1:]) * quantity,2))
                 receipt_list.append(newItem)
-                
-
-
+        
         session.modified = True
 
-
     if form.validate_on_submit():
-        
-        
         return redirect(url_for('leave_review'))
 
     return render_template('checkout.html', total_price = total_price, form = form, receipt_list = receipt_list)
@@ -248,6 +233,8 @@ def checkout(total_price):
 @app.route('/review', methods = ["GET","POST"])
 def leave_review():
     pizzas_bought = []
+
+    # creates list of [pizza] that were bought
     if "basket" in session.keys():
         basket = session["basket"]
         for pizza_id, quantity in basket.items():
@@ -255,6 +242,7 @@ def leave_review():
             if pizza:
                 pizzas_bought.append(pizza)
 
+    # receives the star ratings from user and updates the new average in database
     ratings_json = request.form.get("ratings_json")
     if ratings_json != None:
         if ratings_json != "":
