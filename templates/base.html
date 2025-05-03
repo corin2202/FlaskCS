@@ -15,7 +15,6 @@
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li class = "navbar-element"><a href="{{ url_for('basketPage') }}"><i class="bi bi-basket"></i> Basket</a></li>
-                <!-- Dropdown menu -->
                 
                 {% if request.endpoint == 'galleryPage' %}
                     <li class="dropdown">
@@ -36,6 +35,13 @@
                             </li>
                         </ul>
                     </li>
+
+                    <form class="navbar-form navbar-left" role="search" method="POST" action="/search">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="Search" name="query">
+                        </div>
+                        <button type="submit" class="btn btn-default">Search</button>
+                    </form>
                 {% endif %}
             </li>
             </ul>

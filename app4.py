@@ -94,7 +94,21 @@ class CardForm(FlaskForm):
     cvc = IntegerField("CVC",[DataRequired(),cvc_valid])
     submit = SubmitField('Pay now')
 
-    
+@app.route('/search',methods = ["GET","POST"])
+def search():
+    query1 = request.form.get('query', '').strip().lower()
+
+    searchedPizza = None
+    for id in range(1,db.session.query(Pizza).count()):
+        pizza = Pizza.query.get(id)
+        if query1 in pizza.name.lower():
+            searchedPizza = pizza
+            break
+
+    if searchedPizza is not None:
+        return redirect(url_for('singleProductPage', pizzaName = searchedPizza.name, rating = round(searchedPizza.rating), numratings = searchedPizza.numratings))
+    else:
+        return redirect(url_for('galleryPage'))
 
 @app.route('/', methods = ["GET","POST"])
 def galleryPage():
